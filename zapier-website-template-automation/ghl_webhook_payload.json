@@ -1,0 +1,142 @@
+{
+  "_readme": [
+    "Sample payload the GoHighLevel (GHL) chatbot/workflow webhook action should POST",
+    "to the Zapier 'Catch Raw Hook' trigger. `sample_payload` is a realistic example;",
+    "`field_schema` documents types, requirements, and validation rules (JSON has no",
+    "comment syntax, so schema notes live in the `description`/`validation` keys",
+    "instead of being interspersed as comments)."
+  ],
+
+  "sample_payload": {
+    "contact": {
+      "id": "ghl_contact_8f3a1c",
+      "name": "Jordan Rivera",
+      "email": "jordan@example.com",
+      "phone": "+15551234567"
+    },
+    "template_request": {
+      "description": "A modern landing page for a boutique coffee roastery, warm earth tones, hero section with a signup form for a subscription box.",
+      "css_framework": "none",
+      "template_variant": "landing-page"
+    },
+    "github_credentials": {
+      "owner": "jordan-example",
+      "repo": "my-templates",
+      "branch": "main",
+      "personal_access_token": "github_pat_11AAAAAAA0EXAMPLEEXAMPLEEXAMPLE"
+    },
+    "meta": {
+      "source": "ghl_chatbot",
+      "conversation_id": "conv_9f8e7d",
+      "submitted_at": "2026-08-28T15:04:00Z"
+    }
+  },
+
+  "field_schema": {
+    "contact.id": {
+      "type": "string",
+      "required": true,
+      "source_in_ghl": "Contact ID merge field, e.g. {{contact.id}}",
+      "validation": "Non-empty string."
+    },
+    "contact.name": {
+      "type": "string",
+      "required": true,
+      "source_in_ghl": "{{contact.full_name}} or {{contact.first_name}} {{contact.last_name}}",
+      "validation": "1-200 characters. Used only for email personalization."
+    },
+    "contact.email": {
+      "type": "string",
+      "required": true,
+      "source_in_ghl": "{{contact.email}}",
+      "validation": "Must match a standard email regex, e.g. /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/. Reject the request (respond to the chatbot with an error message) if invalid before ever calling the webhook."
+    },
+    "contact.phone": {
+      "type": "string",
+      "required": false,
+      "source_in_ghl": "{{contact.phone}}",
+      "validation": "E.164 format preferred. Not used by the automation today; reserved for SMS confirmations in a future iteration."
+    },
+    "template_request.description": {
+      "type": "string",
+      "required": true,
+      "source_in_ghl": "Captured via a GHL Conversational AI / chatbot question such as 'Describe the website you want (business type, style, key sections).'",
+      "validation": "10-2000 characters. Trim whitespace. Strip control characters. This is the only field that reaches the Claude prompt, so basic profanity/length filtering in GHL is recommended before sending."
+    },
+    "template_request.css_framework": {
+      "type": "string",
+      "required": false,
+      "default": "none",
+      "allowed_values": ["none", "tailwind", "bootstrap"],
+      "source_in_ghl": "Optional multiple-choice chatbot question or a custom field with a dropdown.",
+      "validation": "Must be one of allowed_values if present; otherwise defaults to 'none' in Step 1 (Parse & Validate)."
+    },
+    "template_request.template_variant": {
+      "type": "string",
+      "required": false,
+      "default": "general",
+      "allowed_values": ["general", "landing-page", "portfolio", "saas", "ecommerce"],
+      "source_in_ghl": "Optional multiple-choice chatbot question, e.g. 'What kind of site is this?'",
+      "validation": "Must be one of allowed_values if present; otherwise defaults to 'general'."
+    },
+    "github_credentials.owner": {
+      "type": "string",
+      "required": true,
+      "source_in_ghl": "A custom field collected once during onboarding (not re-asked every conversation, if avoidable).",
+      "validation": "1-100 chars, matches GitHub username rules: /^[A-Za-z0-9-]+$/."
+    },
+    "github_credentials.repo": {
+      "type": "string",
+      "required": true,
+      "source_in_ghl": "Custom field, collected once during onboarding.",
+      "validation": "1-100 chars, matches /^[A-Za-z0-9._-]+$/. Strip a trailing '.git' if present."
+    },
+    "github_credentials.branch": {
+      "type": "string",
+      "required": false,
+      "default": "main",
+      "source_in_ghl": "Custom field; most users can leave this at the default.",
+      "validation": "1-250 chars, non-empty."
+    },
+    "github_credentials.personal_access_token": {
+      "type": "string",
+      "required": true,
+      "source_in_ghl": "SECURITY-SENSITIVE — see security_notes below before wiring this up.",
+      "validation": "Must match /^(ghp_|github_pat_)/. Never log this value in GHL workflow history or Zapier Zap History (mark the Zapier field as sensitive if your plan supports it)."
+    },
+    "meta.source": {
+      "type": "string",
+      "required": true,
+      "const": "ghl_chatbot",
+      "validation": "Fixed value — lets the Zap distinguish this trigger source if the same webhook URL is ever reused for other automations."
+    },
+    "meta.conversation_id": {
+      "type": "string",
+      "required": false,
+      "source_in_ghl": "{{conversation.id}}",
+      "validation": "Used for support/debugging traceability only."
+    },
+    "meta.submitted_at": {
+      "type": "string",
+      "required": true,
+      "format": "ISO 8601 timestamp",
+      "source_in_ghl": "{{now}} or a GHL workflow 'Current Date/Time' variable.",
+      "validation": "Must parse as a valid date; used for logging and dedupe."
+    }
+  },
+
+  "ghl_configuration_notes": [
+    "1. In GHL, build a Conversational AI / Chatbot flow (or a form) that asks the user for the website description, and optionally the CSS framework and template variant as quick-reply/dropdown questions.",
+    "2. Collect github_credentials.owner, .repo, and .personal_access_token via a one-time onboarding custom field set on the Contact record (Settings > Custom Fields), rather than asking for the token in every chat — this avoids re-transmitting a long-lived secret repeatedly and lets you rotate it in one place.",
+    "3. Add a 'Webhook' action as the final step of the GHL Workflow, method POST, URL = the Zapier 'Catch Raw Hook' URL from zapier_zap_config.json.",
+    "4. Set the webhook Content-Type to application/json and build the JSON body using GHL's merge-field syntax to match the sample_payload shape above exactly (field names and nesting matter — Step 1 of the Zap maps by exact key path).",
+    "5. Add a custom header, e.g. X-Webhook-Secret: <shared secret>, configured identically in both GHL and the Zap's Step 1 validator, so the Zap can reject spoofed requests that aren't actually from your GHL workflow.",
+    "6. Test using GHL's built-in 'Test Workflow' / webhook test action before going live, and confirm the payload lands correctly in Zapier's trigger test data."
+  ],
+
+  "security_notes": [
+    "Sending a raw GitHub Personal Access Token through a chatbot conversation is inherently risky: GHL logs conversation and workflow history, and that history may include the token in plaintext.",
+    "Recommended mitigation for the MVP: collect the PAT once via a secure onboarding form (not the chatbot) and store it as a GHL custom field on the contact, scoped with the minimum required permissions (fine-grained PAT, single repo, Contents: Read & write, short expiration with a renewal reminder).",
+    "Recommended mitigation for Phase 2: replace raw PAT collection entirely with a GitHub App installation flow (OAuth), so users authorize access via GitHub's own consent screen and Zapier/your backend stores only a short-lived installation token — no PAT ever passes through GHL or chat."
+  ]
+}
