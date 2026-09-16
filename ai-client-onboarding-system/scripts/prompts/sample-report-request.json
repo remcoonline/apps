@@ -1,0 +1,18 @@
+{
+  "client_name": "Dana Reyes",
+  "month": "September 2026",
+  "completed_tasks": [
+    { "title": "Set up retargeting pixel", "completed_date": "2026-09-04" },
+    { "title": "Launched first-time buyer ad campaign", "completed_date": "2026-09-10" },
+    { "title": "Integrated CRM with lead follow-up automation", "completed_date": "2026-09-15" }
+  ],
+  "upcoming_tasks": [
+    { "title": "A/B test ad creative variants", "due_date": "2026-10-05" },
+    { "title": "Add SMS follow-up sequence", "due_date": "2026-10-10" }
+  ],
+  "original_goals": [
+    "10-15 booked appointments a month",
+    "Faster response time to leads"
+  ],
+  "portal_link": "https://notion.so/example-client-portal"
+}

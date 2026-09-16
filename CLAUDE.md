@@ -46,3 +46,11 @@ Set `GEMINI_API_KEY` in `.env.local` (currently checked in with a placeholder va
 - **Styling**: Tailwind CSS loaded via CDN `<script>` in `index.html` (no Tailwind build step/config) plus a plain `index.css`. Components use Tailwind utility classes inline; there is no CSS-in-JS or component styling library.
 - **Module loading**: `index.html` uses an import map pointing `react`, `react-dom`, and `@google/genai` at `aistudiocdn.com`, alongside the normal npm-installed copies used by Vite's dev/build pipeline — an artifact of the AI Studio export. Keep both in sync if upgrading these dependencies.
 - **Path alias**: `@/*` maps to the app root (see `tsconfig.json` / `vite.config.ts`), though existing code consistently uses relative imports instead.
+
+## The app: AI Client Onboarding System
+
+`ai-client-onboarding-system/` — not a Google AI Studio export like the credit card tracker; built directly in this repo. It's an automation blueprint + a small deployable Node service, not a standalone web app with a dev server.
+
+- **What it is**: architecture, Zapier Zap recipes, AI system prompts, and Notion/Drive/Gmail templates for a fully automated client onboarding pipeline (contract → payment → tool access → kickoff → AI brief → portal → recurring monthly report). Start at `ai-client-onboarding-system/README.md`.
+- **The only runnable code**: `ai-client-onboarding-system/scripts/` — an Express service (`server.js`) exposing `POST /generate-brief` and `POST /generate-report`, called by Zapier's Webhooks step to generate AI content via the Claude API. Run with `npm install && npm start` inside that directory; requires `ANTHROPIC_API_KEY` (see `.env.example`).
+- Everything else (`docs/`, `templates/`, `notion/`) is documentation meant to be read and used to configure Zapier/Notion/Google Workspace directly — there's nothing to build or run for those.
