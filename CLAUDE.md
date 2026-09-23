@@ -9,6 +9,7 @@ This repository (`remcoonline/apps`) is a landing spot for apps uploaded from Go
 - `README.md` — one-line description of the repo's purpose (apps for remcoonline, uploaded from a local machine).
 - `LICENSE`
 - `copy-of-ai-credit-card-tracker (1).zip` — a zipped Google AI Studio export containing the actual application source. **This is the real codebase**; nothing is checked out at the root.
+- `seo-audit-app/` — an Expo (SDK 57, Expo Router) mobile app that audits a website (on-device crawl → deterministic score → Claude-written report). It is checked out source, not a zip; see its own `README.md` and `AGENTS.md`. Typecheck with `npx tsc --noEmit` and verify bundling with `npx expo export --platform android` inside that directory.
 
 Before doing any work on the app, extract the archive:
 
