@@ -9,7 +9,7 @@ import { usePalette } from '@/lib/theme';
 export default function SettingsScreen() {
   const p = usePalette();
   const [key, setKey] = useState('');
-  const [model, setModelState] = useState<ModelId>('claude-opus-5');
+  const [model, setModelState] = useState<ModelId>('claude-sonnet-5');
 
   useEffect(() => {
     getApiKey().then(setKey);

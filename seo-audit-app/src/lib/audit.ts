@@ -8,8 +8,8 @@ import type { CrawlData } from './crawl';
 import type { TechScore } from './score';
 
 export const MODELS = [
-  { id: 'claude-opus-5', label: 'Claude Opus 5', note: 'Deepest analysis (default)' },
-  { id: 'claude-sonnet-5', label: 'Claude Sonnet 5', note: 'Faster, ~60% cheaper' },
+  { id: 'claude-sonnet-5', label: 'Claude Sonnet 5', note: 'Fast and cost-efficient (default)' },
+  { id: 'claude-opus-5', label: 'Claude Opus 5', note: 'Deepest analysis, ~2.5x the cost' },
 ] as const;
 export type ModelId = (typeof MODELS)[number]['id'];
 
@@ -166,7 +166,7 @@ export function describeError(e: unknown): string {
   if (e instanceof Anthropic.PermissionDeniedError) return 'This API key does not have access to that model or feature.';
   if (e instanceof Anthropic.RateLimitError) return 'Rate limited by the Anthropic API. Wait a minute and try again.';
   if (e instanceof Anthropic.BadRequestError) return `Request rejected: ${e.message}`;
-  if (e instanceof Anthropic.APIConnectionTimeoutError) return 'The audit timed out. Try again or switch to Sonnet 5 in Settings.';
+  if (e instanceof Anthropic.APIConnectionTimeoutError) return 'The audit timed out. Try again.';
   if (e instanceof Anthropic.APIConnectionError) return 'Could not reach the Anthropic API. Check your connection.';
   if (e instanceof Anthropic.APIError) return `Anthropic API error ${e.status}: ${e.message}`;
   return e instanceof Error ? e.message : String(e);

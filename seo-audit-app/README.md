@@ -30,8 +30,8 @@ npx expo start
 Scan the QR code with **Expo Go**, open **Settings**, paste your Anthropic API key (from https://platform.claude.com/settings/keys) and run an audit.
 
 - Use your **phone**, not the web preview (`w`). Browsers block cross-site requests, so the on-device crawl fails on web. Claude still fetches the site itself, but the measured checks tab will be empty.
-- Model: **Claude Opus 5** by default (deepest analysis). Switch to **Sonnet 5** in Settings for faster, cheaper runs.
-- Cost: roughly $0.30–$1.00 per audit on Opus 5, depending on how much web research runs.
+- Model: **Claude Sonnet 5** by default (fast, cost-efficient). Switch to **Opus 5** in Settings for the deepest analysis.
+- Cost: an estimate, not measured: roughly $0.15–$0.40 per audit on Sonnet 5 and $0.30–$1.00 on Opus 5, depending on how much web research runs.
 - The API key is stored in the device keychain (`expo-secure-store`). There is no backend. Don't ship this build to customers without moving the Claude call behind a server.
 
 ## Project layout

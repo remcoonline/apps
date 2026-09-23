@@ -39,7 +39,7 @@ export async function setApiKey(key: string) {
 }
 
 export async function getModel(): Promise<ModelId> {
-  return ((await AsyncStorage.getItem(MODEL)) as ModelId | null) ?? 'claude-opus-5';
+  return ((await AsyncStorage.getItem(MODEL)) as ModelId | null) ?? 'claude-sonnet-5';
 }
 
 export const setModel = (m: ModelId) => AsyncStorage.setItem(MODEL, m);
