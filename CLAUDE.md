@@ -16,7 +16,7 @@ Before doing any work on the app, extract the archive:
 unzip "copy-of-ai-credit-card-tracker (1).zip" -d ai-credit-card-tracker
 ```
 
-In Claude Code on the web sessions, the SessionStart hook (`.claude/hooks/session-start.sh`) does this extraction and runs `npm install` automatically; it skips extraction if `ai-credit-card-tracker/package.json` already exists, so local edits are never overwritten.
+In Claude Code on the web sessions, the SessionStart hook (`.claude/hooks/session-start.sh`) does this extraction and runs `npm install` automatically; it skips extraction if `ai-credit-card-tracker/package.json` already exists, so local edits are never overwritten. `ai-credit-card-tracker/` is git-ignored, so edits made there are not committed; to keep app changes, remove that `.gitignore` entry and commit the source (or re-zip it).
 
 Do not extract it in place at the repo root — the zip's own `README.md` and `.gitignore` would collide with the repo's top-level files. If more app archives are added to this repo later, follow the same pattern: extract each into its own sibling directory rather than merging them at the root.
 
